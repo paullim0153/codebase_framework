@@ -1,0 +1,138 @@
+﻿# Architecture Decision Records
+<!-- ADR: "어떤 시스템/기술 구조를 가져가는가?" -->
+<!-- 각 결정은 번복하기 어려운 선택들이다. 충분한 근거와 트레이드오프를 반드시 기록한다 -->
+
+## 철학
+
+> {예: MVP 속도 최우선. 외부 의존성은 최소화한다. 작동하는 최소 구현을 선택하고, 필요할 때 교체한다.}
+
+---
+
+## ADR-001: {핵심 프레임워크 선택}
+<!-- 예: Next.js 15 (App Router) 선택 -->
+
+**상태**: Accepted  
+**결정일**: {YYYY-MM-DD}  
+**결정자**: {이름}
+
+### Context (배경)
+{왜 이 결정이 필요했는지 설명. 어떤 대안들을 검토했는지}
+
+> 예: SSR이 필요한 데이터 중심 애플리케이션이며, SEO가 중요하다. React 생태계를 유지하면서 서버 렌더링을 지원하는 프레임워크가 필요했다.
+
+### Decision (결정)
+{무엇을 선택했는지}
+
+> 예: Next.js 15 App Router를 선택한다. Server Components를 기본으로 사용하고, 인터랙션이 필요한 부분만 Client Component로 분리한다.
+
+### Consequences (결과 & 트레이드오프)
+| 장점 | 단점 |
+|------|------|
+| {예: Vercel 배포 연동 최적화} | {예: App Router 학습 곡선} |
+| {예: Server Component로 API 키 노출 방지} | {예: Pages Router 대비 커뮤니티 자료 적음} |
+
+### Rejected Alternatives (거절한 대안)
+- **{예: Remix}**: {예: 팀 경험 부족. 전환 비용이 더 크다고 판단}
+- **{예: Vite SPA}**: {예: SSR 미지원으로 SEO 불가}
+
+---
+
+## ADR-002: {데이터베이스 선택}
+<!-- 예: Supabase (PostgreSQL) 선택 -->
+
+**상태**: Accepted  
+**결정일**: {YYYY-MM-DD}  
+**결정자**: {이름}
+
+### Context (배경)
+{왜 이 결정이 필요했는지}
+
+### Decision (결정)
+{무엇을 선택했는지}
+
+### Consequences (결과 & 트레이드오프)
+| 장점 | 단점 |
+|------|------|
+| {장점 1} | {단점 1} |
+| {장점 2} | {단점 2} |
+
+### Rejected Alternatives (거절한 대안)
+- **{대안 1}**: {거절 이유}
+
+---
+
+## ADR-003: {상태 관리 전략}
+
+**상태**: Accepted  
+**결정일**: {YYYY-MM-DD}
+
+### Context
+{서버 상태와 클라이언트 상태를 어떻게 관리할지 결정이 필요했다}
+
+### Decision
+- **서버 상태**: {예: React Query (TanStack Query) — API 데이터 캐싱 및 동기화}
+- **클라이언트 상태**: {예: Zustand — 전역 UI 상태 (모달, 사이드바 등)}
+- **로컬 상태**: {예: useState/useReducer — 컴포넌트 내부 상태}
+
+### Consequences
+| 장점 | 단점 |
+|------|------|
+| {장점 1} | {단점 1} |
+
+---
+
+## ADR-004: {인증/인가 전략}
+
+**상태**: Accepted  
+**결정일**: {YYYY-MM-DD}
+
+### Decision
+{예: Supabase Auth + Next.js Middleware를 사용한다. JWT 토큰 기반 세션 관리. 역할은 Admin/User 2가지로 제한(PRD-001 참조).}
+
+### Security Rules
+- {예: 모든 API Route는 서버 사이드에서 세션 검증 필수}
+- {예: RLS(Row Level Security)를 데이터베이스 레벨에서 적용}
+- {예: 민감한 작업은 서버 사이드 Admin 클라이언트만 허용}
+
+---
+
+## ADR-005: {배포 및 인프라 전략}
+
+**상태**: Accepted  
+**결정일**: {YYYY-MM-DD}
+
+### Decision
+{예: Vercel (프론트엔드) + Supabase (백엔드). CI/CD는 GitHub Actions.}
+
+### Environment Strategy
+| 환경 | 용도 | 브랜치 |
+|------|------|--------|
+| Production | 실제 서비스 | `main` |
+| Staging | QA 검증 | `develop` |
+| Preview | PR 리뷰 | feature branches |
+
+---
+
+## ADR 추가 방법
+
+새로운 아키텍처 결정이 필요할 때:
+
+```markdown
+## ADR-{번호}: {결정 사항 제목}
+
+**상태**: Proposed / Accepted / Deprecated / Superseded by ADR-{번호}
+**결정일**: YYYY-MM-DD
+
+### Context
+### Decision
+### Consequences
+### Rejected Alternatives
+```
+
+---
+
+## Change Log
+
+| 날짜 | 내용 | 작성자 |
+|------|------|--------|
+| {YYYY-MM-DD} | 최초 작성 | {이름} |
